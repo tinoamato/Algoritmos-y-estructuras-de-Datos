@@ -1,0 +1,14 @@
+# depslib dependency file v1.0
+1694455899 source:c:\users\joakk\onedrive\documentos\tda cola dinamica\main.c
+	<stdio.h>
+	<stdlib.h>
+	"funciones.h"
+
+1694456018 source:c:\users\joakk\onedrive\documentos\tda cola dinamica\funciones.c
+	"funciones.h"
+
+1694455937 c:\users\joakk\onedrive\documentos\tda cola dinamica\funciones.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
