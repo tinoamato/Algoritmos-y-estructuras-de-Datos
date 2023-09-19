@@ -1,0 +1,40 @@
+void mostrarTresPilaEnteros(Pila *pp, Pila *pp2, Pila *pp3)
+{
+    Pila aux,aux2,aux3;
+    int elem,elem2,elem3;
+    int tope;
+
+    crear_pila(&aux);
+    crear_pila(&aux2);
+    crear_pila(&aux3);
+    puts("\tP1 \tp2 \tp3");
+    while(!pilaVacia(pp) || !pilaVacia(pp2) || !pilaVacia(pp3))
+    {
+        tope=desapilar(pp, &elem, sizeof(int));
+        if(!tope) elem=0;
+        tope=desapilar(pp2, &elem2, sizeof(int));
+        if(!tope) elem2=0;
+        tope=desapilar(pp3, &elem3, sizeof(int));
+        if(!tope) elem3=0;
+
+
+        printf("\t%d \t%d \t%d \n", elem, elem2,elem3);
+        apilar(&aux,&elem, sizeof(int));
+        apilar(&aux2,&elem2, sizeof(int));
+        apilar(&aux3,&elem3, sizeof(int));
+
+    }
+
+    while(!pilaVacia(&aux))
+    {
+
+        desapilar(&aux, &elem, sizeof(int));
+        desapilar(&aux2, &elem2, sizeof(int));
+        desapilar(&aux3, &elem3, sizeof(int));
+
+        apilar(pp,&elem, sizeof(int));
+        apilar(pp2,&elem2, sizeof(int));
+        apilar(pp3,&elem3, sizeof(int));
+    }
+
+}
