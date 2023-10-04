@@ -1,0 +1,8 @@
+# depslib dependency file v1.0
+1696377310 source:c:\users\laboratorios.unlmlab\desktop\lista\main.c
+	"funciones.h"
+
+1696377350 c:\users\laboratorios.unlmlab\desktop\lista\funciones.h
+	<stdio.h>
+	<stdlib.h>
+
