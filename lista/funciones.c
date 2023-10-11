@@ -52,6 +52,7 @@ int reduce_lista(const t_lista *pl, void* ret, int(*reduccion)(const void*,void*
 
 
     }
+    return r;
 }
 
 int promedio_alu(const void* valu,void* vprom,void* vcant_alu) //mal copiada
