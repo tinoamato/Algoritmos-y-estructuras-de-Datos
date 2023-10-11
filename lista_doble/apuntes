@@ -1,0 +1,113 @@
+aux_ant = nodo antes del q estoy insertando
+aux_sig = nodo despues del q estoy insertando
+aux_sig = NULL entonces es el ult
+aux_ant = NULL entonces es el pri
+aux_ant = aux_sig = NULL entonces esta vacia
+
+INSERTAR ORDENADO
+
+1) crear nodo memdin
+2) llenar datos
+3) nue->sig = aux_sig
+4) nue->ant = aux_ant
+5) if(aux_ant)
+    aux_ant->sig = nue
+6) if(aux_sig)
+    aux_sig->ant =nue
+7) *pl = nue
+
+1)
+t_nodod* aux_sig = *pl
+*aux_ant = aux_sig ? aux_sig->ant : NULL
+
+while(aux_ant && cmp(pd,aux_ant->info)<0 )
+    {
+        aux_sig = aux_ant;
+        aux_ant = aux_ant->ant;
+    }
+
+while(aux_sig && cmp(pd,aux_sig->info)>0)
+    {
+        aux_ant = aux_sig;
+        aux_sig = aux_sig->sig;
+    }
+
+    if((aux_sig && cmp(pd,aux_sog->info)==0) || (aux_ant && cmp(pf,aux_ant->info)==0))
+    {
+        return 0; // duplicado
+    }
+ ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+ ELIMINAR //asumo ordenada
+
+ int sacar_elem_listad(t_listad *pl, void* pd, size_t tam,int (*cmp)(const void*,const void*))
+ {
+    t_nodod* elim = *pl;
+
+    while(elim && cmp(pd,elim->info)<0)
+        elim = elim->ant;
+    while(elim && cmp (pd,elim->info)>0)
+        elim = elim->sig;
+    if(!elim || cmp(pd,elim->info)!=0)
+        return 0; //no existe
+    memcpy(pd,elim->info,MEN(tam,elim->tam)); // siempre q se elimina hay que copiar el dato
+
+    if(elim->ant)
+        elim->ant->sig = elim->sig;
+    if(elim->sig)
+        elim->sig->ant = elim->ant;
+    *pl = elim->sig ? elim->sig : elim->ant;
+
+    free(elim->info);
+    free(elim);
+    return 1; //ok
+
+
+ }
+
+ ///////////////////////////////////////////////////////////////////////////
+ int primero_listad(t_listad *pl,void *pd,size_t tam)
+ {
+    if(!*pl)
+        return 0;
+    while((*pl)->ant)
+        *pl = (*pl)->ant;
+    memcpy(pd,(*pl)->info,MEN(tam,(*pl)->tam));
+    return 1;
+
+ }
+
+ ///////////////////////////////////////////////////////////////////////////
+
+ int siguiente_listad (t_listad *pl,void *pd,size_t tam)
+ {
+    if(!*pl || !(*pl)->sig)
+        return 0;
+    *pl = (*pl)->sig;
+    memcpy (pd,(*pd)->info,MEN(tam,(*pl)->tam));
+
+    return 1;
+ }
+ ///////////////////////////////////////////////////////////////////////////
+ //hacer anterior y ultimo
+
+
+ ///////////////////////////////////////////////////////////////////////////
+
+ El indice esta ordenado
+ Tiene la pos de los datos
+ Indice ordenado por el dato
+ clave(dato) y nro_reg
+
+ Funciones:
+
+ crear_indice
+ insertar_indice
+ eliminar_de_indice (busca elemento y lo elimina)
+ buscar_indice
+ vaciar_indice
+ grabar_indice_en_arch
+ cargar_indice_de_arch
+
+
+
