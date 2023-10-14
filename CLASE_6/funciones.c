@@ -14,7 +14,7 @@ int poner_al_final_lista (t_lista* pl, void* pd,size_t tam)
     nue->info = malloc(tam);
     if(!nue->info)
     {
-        free(nue);
+        free(nue); //libero memoria
         return 0; ///lista llena
     }
 
