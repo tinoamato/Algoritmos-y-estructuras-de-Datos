@@ -1,0 +1,12 @@
+# depslib dependency file v1.0
+1698798250 source:c:\users\laboratorios.unlmlab\desktop\apuntes_clase\apuntes.c
+
+1698793558 source:c:\users\laboratorios.unlmlab\desktop\apuntes_clase\funciones.c
+	"funciones.h"
+
+1698793558 c:\users\laboratorios.unlmlab\desktop\apuntes_clase\funciones.h
+
+1698796774 source:c:\users\laboratorios.unlmlab\desktop\apuntes_clase\main.c
+	<stdio.h>
+	<stdlib.h>
+

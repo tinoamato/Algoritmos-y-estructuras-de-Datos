@@ -1,0 +1,14 @@
+# depslib dependency file v1.0
+1698193638 source:c:\users\laboratorios.unlmlab\desktop\arboles\apntes.c
+
+1698191538 source:c:\users\laboratorios.unlmlab\desktop\arboles\main.c
+	"funciones.h"
+
+1698195287 c:\users\laboratorios.unlmlab\desktop\arboles\funciones.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
+1698195270 source:c:\users\laboratorios.unlmlab\desktop\arboles\funciones.c
+	"funciones.h"
+
