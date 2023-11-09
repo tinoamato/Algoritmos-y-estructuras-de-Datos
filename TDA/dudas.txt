@@ -1,0 +1,19 @@
+int cola_vacia(t_cola *pc)
+{
+    if(!pc->ult) // deberia ser pc->pri, pq siempre ult es NULL
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+
+en frente_cola pq hace falta?
+if(!frente->info)
+    {
+        free(frente);
+        return 0;
+    }
