@@ -292,7 +292,7 @@ int darDeBaja(t_indice *ind, char *rutaBin) ///RUTINA (B)
     scanf("%ld", &(auxSocio.nroSocio));
     fflush(stdin);
     resultado = ind_buscar(ind,&(auxSocio.nroSocio),&(nro_RegAux));
-     if(resultado == 1)
+    if(resultado == 1)
     {
         fseek(pf,sizeof(t_Socio)*nro_RegAux,SEEK_SET);
         fread(&(auxSocio),sizeof(t_Socio),1,pf);
@@ -329,14 +329,161 @@ int darDeBaja(t_indice *ind, char *rutaBin) ///RUTINA (B)
     fclose(pf);
     return 1;
 }
+int listar_socios_baja(t_indice *ind, char *rutaBin)
+{
+    ///Recorrer lista(lista, accion, param) ///param arch
+    ///Dentro recorrer Lista llama accion///
+    ///Accion es (mostrar Si baja)///
+    /// Carga del arch el registro buscado en un aux///
+    ///Si el aux tiene estado en B, lo mustra completo por pantalla///
+    FILE *pf;
+    int r;
+    pf = fopen(rutaBin, "rb");
+    if(!pf)
+    {
+        return 0;
+    }
+    r = recorrerLista(&(ind->lista),mostrar_Si_Baja,pf);
+    return r;
 
-///FUNCIONES NECESARIAS
+}
+int listar_socios_alta(t_indice *ind, char *rutaBin)
+{
+
+    FILE *pf;
+    int r;
+    pf = fopen(rutaBin, "rb");
+    if(!pf)
+    {
+        return 0;
+    }
+    r = recorrerLista(&(ind->lista),mostrar_Si_Alta,pf);
+    return r;
+
+}
+int listar_10_socios_mayor_retraso(char* rutaBin) ///fijarse que muestra los 10 pero al reves
+{
+    t_lista aux_lista;
+    int i=0;
+    t_Socio aux_socio;
+    t_Socio basura;
+    FILE* pf = fopen(rutaBin,"rb");
+
+    if(!pf)
+        return 0;
+
+    crearLista(&aux_lista);
+
+    fread(&aux_socio,sizeof(t_Socio),1,pf);
+    for(i = 0; i<10; i++)
+    {
+        insertarEnOrdenLista(&aux_lista,sizeof(t_Socio),&aux_socio,comp_mayor_retraso);
+        fread(&aux_socio,sizeof(t_Socio),1,pf);
+
+    }
+
+    while(!feof(pf))
+    {
+        if(comp_mayor_retraso(&aux_socio,(aux_lista)->info)>0)
+        {
+
+            eliminarPrimeroLista(&aux_lista,sizeof(t_Socio),&basura); //no lo usas lo que eliminas
+            insertarEnOrdenLista(&aux_lista,sizeof(t_Socio),&aux_socio,comp_mayor_retraso);
+        }
+        fread(&aux_socio,sizeof(t_Socio),1,pf);
+    }
+
+    recorrerLista(&aux_lista,mostrar_Todos,0);
+
+    return 1;
+
+}
+
+///FUNCIONES NECESARIAS`
 int compararT_datos(const void* dato, const void* dato_lista)
 {
     long auxA;
     long auxB;
+
     memcpy(&auxA,dato+sizeof(unsigned),sizeof(long));
+
     memcpy(&auxB,dato_lista+sizeof(unsigned),sizeof(long));
+
     return (auxA) - (auxB);
 }
+int comp_mayor_retraso(const void* dato,const void* dato_lista)
+{
+    t_Socio* auxB = (t_Socio*)dato;
+    t_Socio* auxA = (t_Socio*)dato_lista;
+    int comp;
+
+    if(!(comp = (auxA->fecha_Ultimo_Cuota_Paga.aa - auxB->fecha_Ultimo_Cuota_Paga.aa)))
+    {
+        if(!(comp = (auxA->fecha_Ultimo_Cuota_Paga.mm - auxB->fecha_Ultimo_Cuota_Paga.mm)))
+        {
+            comp = (auxA->fecha_Ultimo_Cuota_Paga.dd - auxB->fecha_Ultimo_Cuota_Paga.dd);
+        }
+    }
+    return comp;
+
+}
+void mostrar_Si_Baja(const void* dato, unsigned tam_RegIndice, void *arch)
+{
+    FILE *pf = (FILE*)arch;
+    t_Socio aux;
+    unsigned nro_reg;
+
+    memcpy(&nro_reg,dato,sizeof(unsigned));
+
+    fseek(pf,sizeof(t_Socio)*nro_reg,SEEK_SET);
+
+    fread(&aux,sizeof(t_Socio),1,pf);
+
+    if(aux.estado == 'B')  ///I
+    {
+        mostrarSocio(&aux);
+    }
+
+}
+void mostrar_Si_Alta(const void* dato, unsigned tam_RegIndice, void *arch)
+{
+    FILE *pf = (FILE*)arch;
+    t_Socio aux;
+    unsigned nro_reg;
+
+    memcpy(&nro_reg,dato,sizeof(unsigned));
+
+    fseek(pf,sizeof(t_Socio)*nro_reg,SEEK_SET);
+
+    fread(&aux,sizeof(t_Socio),1,pf);
+
+    if(aux.estado == 'A')
+    {
+        mostrarSocio(&aux);
+    }
+
+}
+void mostrar_Todos(const void* dato, unsigned tam_RegIndice, void *arch)
+{
+    t_Socio* aux = (t_Socio*)dato;
+
+    mostrarSocio(aux);
+}
+void mostrarSocio(t_Socio *socio)
+{
+    printf("\nNro Socio: %li", socio->nroSocio);
+    printf("\nApellido y Nombre: %s", socio->apyn);
+    printf("\nDni: %li", socio->dni);
+    printf("\nFecha Nac: %d - %d - %d", socio->fecha_Nac.dd, socio->fecha_Nac.mm, socio->fecha_Nac.aa);
+    printf("\nSexo: %c", socio->sexo);
+    printf("\nFecha Afil: %d - %d - %d", socio->fecha_Afil.dd, socio->fecha_Afil.mm, socio->fecha_Afil.aa);
+    printf("\nCategoria: %s", socio->categoria);
+    printf("\nFecha ultima Cuota Paga: %d - %d - %d", socio->fecha_Ultimo_Cuota_Paga.dd, socio->fecha_Ultimo_Cuota_Paga.mm, socio->fecha_Ultimo_Cuota_Paga.aa);
+    printf("\nEstado: %c", socio->estado);
+    if(socio->estado == 'B')
+        printf("\nFecha de Baja: %d - %d - %d", socio->fecha_De_Baja.dd, socio->fecha_De_Baja.mm, socio->fecha_De_Baja.aa);
+    printf("\n");
+
+}
+
 

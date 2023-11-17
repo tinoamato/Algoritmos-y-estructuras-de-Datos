@@ -47,9 +47,14 @@ int nuevoSocio(t_indice *ind, char *rutaBin); ///RUTINA (A)
 int modificar_Nom_Apellido(t_indice *ind, char *rutaBin); ///RUTINA (M)
 int darDeBaja(t_indice *ind, char *rutaBin); ///RUTINA (B)
 int listar_socios_baja(t_indice *ind, char *rutaBin);///RUTINA (L)
-int mostrar_socios_Activos(t_indice *ind, char *rutaBin);///RUTINA(V)
-int listar_10_socios_mayor_retraso(t_indice *ind, char *rutaBin); ///RUTINA (P)
+int listar_socios_alta(t_indice *ind, char *rutaBin);///RUTINA(V)
+int listar_10_socios_mayor_retraso(char *rutaBin); ///RUTINA (P)
 
 ///FUNCIONES NECESARIAS
 int compararT_datos(const void*, const void*);
+int comp_mayor_retraso(const void* dato,const void* dato_lista);
+void mostrar_Si_Baja(const void* dato, unsigned tam_RegIndice, void *arch);
+void mostrar_Si_Alta(const void* dato, unsigned tam_RegIndice, void *arch);
+void mostrar_Todos(const void* dato, unsigned tam_RegIndice, void *arch);
+void mostrarSocio(t_Socio *socio);
 #endif // FUNC_H_INCLUDED

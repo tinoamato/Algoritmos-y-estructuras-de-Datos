@@ -100,8 +100,25 @@ int recorrerLista(const t_lista *pl, void (*accion)(const void*,unsigned, void*)
     }
     while(*pl && r)  ///RECORRE TODA LA LISTA
     {
-//       r = accion((*pl)->info,, parametro); ///FALLA GENRICO?
+       accion((*pl)->info,(*pl)->tam, parametro);
         pl = &(*pl)->sig;
     }
-    return r;
+    return 1;
+}
+int eliminarPrimeroLista(t_lista* pl,size_t tam,void* elem)
+{
+    t_nodo* elim;
+
+    elim = (*pl);
+    if(!*pl)
+        return 0;
+    memcpy(elem,elim->info,tam<elim->tam?tam:elim->tam);
+
+    *pl = elim->sig;
+    free(elim->info);
+    free(elim);
+
+
+
+    return 1;
 }

@@ -43,13 +43,13 @@ int main()
             darDeBaja(&ind,"socios.dat");
             break;
         case 'L':
-//    listar_socios_baja(&ind, "socios.dat");
+            listar_socios_baja(&ind, "socios.dat");
             break;
         case 'V':
-//    mostrar_socios_Activos(&(ind), "socios.dat");
+           listar_socios_alta(&(ind), "socios.dat");
             break;
         case 'P':
-//    listar_10_socios_mayor_retraso(&ind, "socios.dat");
+            listar_10_socios_mayor_retraso("socios.dat");
             break;
         case 'S':
             printf("\nSaliendo....\n\n");
@@ -58,7 +58,7 @@ int main()
             printf("\n LA LETRA QUE PUSO NO ES NINGUNA DE LAS OPCIONES DEL MENU\n\n");
         }
         fflush(stdin);
-        printf("Toque cualquier tecla para continuar\n");
+        printf("\n\nToque cualquier tecla para continuar\n");
         system("pause");
         system("cls");
     }
