@@ -46,7 +46,7 @@ int main()
             listar_socios_baja(&ind, "socios.dat");
             break;
         case 'V':
-           listar_socios_alta(&(ind), "socios.dat");
+            listar_socios_alta(&(ind), "socios.dat");
             break;
         case 'P':
             listar_10_socios_mayor_retraso("socios.dat");
@@ -63,32 +63,7 @@ int main()
         system("cls");
     }
     while(accesoMenu != 'S');
-//    ind_grabar(&ind, "socios.idx");
+    ind_grabar(&ind, "socios.idx");
     return 0;
 }
-/*
-    Que usemos primivitvas de lista dentro de las prmitivas de indice haria que indice deje de ser generico? /// NO FALLA
 
-    La forma de lectura en el trozado de las Tfechas es valida o no serviria? /// NO FALLA
-
-    La lista dentro de t_inidice debe ser una lista o un puntero a lista?
-
-    En insertar_indice estaria mal usar reg_indice ya que el usuario tiene acceso a el y no lo pide?
-
-    Porque tira ese warning en la funcion de comparacion? (solucion con long long pero no deberia funcionar)
-
-    Preguntar porque cuando guarda la clave y lo casteamos a long aparece con un nuermo mas del Nro_socio
-
-    Preguntar que hace con el const en el caso de buscar ya que deberia devolver sobre el indice pero no podemos editarlo
-
-    Preguntar que hace el unsigned en la funcion accion que pasamos por parametro en ind_Recorrer
-
-    Preguntar lo de ind_Buscar (esta la pregunta en la implementacion)
-
-    Preguntar si en recorrer_lista no deberia haber una flag para salir del while si no se pudo hacer la accion
-
-    En la funcion (A) lo que se fija es el dni o el nro_socio?
-
-    Mirar duda en IND_CARGAR
-
-*/

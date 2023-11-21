@@ -27,9 +27,10 @@ int insertarFinalLista(t_lista *pl, size_t tam, const void *elem);
 int eliminarPrimeroLista(t_lista *pl, size_t tam, void *elem);
 int eliminarElementoLista(t_lista *pl, size_t tam, void *elem, int(*cmp)(const void*,const void*));
 int verPrimeroDeLista(const t_lista *pl, size_t tam, void *elem);
-int verElementoDeLista(const t_lista *pl, size_t tam, void *elem, int (*cmp)(const void*, const void*)); ///PREGUNTAR SI ESTA BIEN ESTA PRIMITIVA O NO LA PUEDO CREAR
+int verElementoDeLista(const t_lista *pl, size_t tam, void *elem, int (*cmp)(const void*, const void*));
 int recorrerLista(const t_lista *pl, void (*accion)(const void*,unsigned, void*), void *parametro);
 void vaciarLista(t_lista *pl);
+int ordenarListaInsercion(t_lista* pl, int (*cmp)(const void*, const void*));
 
 
 

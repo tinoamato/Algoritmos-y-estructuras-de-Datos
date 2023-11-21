@@ -2,6 +2,8 @@
 #include "Lista.h"
 #include "indice.h"
 
+#define ESBICIESTO(X) ((X%4==0 && X%100!=0) || X%400==0)? (1) : (0)
+
 ///FUNCIONES ARCHIVO
 void trozado(char *linea, t_Socio *dato)
 {
@@ -124,10 +126,10 @@ int ind_cargarBin(t_indice *ind, const char *ruta)
         return 0;
     }
     fread(&socio, sizeof(t_Socio), 1, pf);
-    while(!feof(pf) && estado)  ///Tal vez estado no va
+    while(!feof(pf) && estado)
     {
-        memcpy((ind->reg_indice), &nro_Reg, sizeof(unsigned)); ///Esto deberia hacerse en una funcion?
-        memcpy((ind->reg_indice)+sizeof(unsigned), &(socio.nroSocio), sizeof(long)); ///Esto deberia hacerse en una funcion?
+        memcpy((ind->reg_indice), &nro_Reg, sizeof(unsigned));
+        memcpy((ind->reg_indice)+sizeof(unsigned), &(socio.nroSocio), sizeof(long));
         estado = insertarEnOrdenLista(&(ind->lista), ind->tamClave+ sizeof(unsigned), (ind->reg_indice), ind->cmp);
         nro_Reg++;
         fread(&socio, sizeof(t_Socio), 1, pf);
@@ -140,6 +142,7 @@ int nuevoSocio(t_indice *ind, char *rutaBin)
 {
     FILE *pf;
     t_Socio auxSocio;
+    const char categorias[][10]= {{"MENOR"},{"CADETE"},{"ADULTO"},{"VITALICIO"},{"HONORARIO"},{"JUBILADO"}};
     int resultado;
     unsigned nro_RegAux;
     pf = fopen(rutaBin,"r+b");
@@ -147,9 +150,16 @@ int nuevoSocio(t_indice *ind, char *rutaBin)
     {
         return 0;
     }
-    printf("\nIngrese el NroSocio del Socio para dar de ALTA: ");
-    scanf("%ld", &(auxSocio.nroSocio));
-    fflush(stdin);
+    do
+    {
+
+        printf("\nIngrese el NroSocio del Socio para dar de ALTA: ");
+        scanf("%ld", &(auxSocio.nroSocio));
+        fflush(stdin);
+
+    }
+    while(!(auxSocio.nroSocio >= 1 && auxSocio.nroSocio <= 10000000));
+
     resultado = ind_buscar(ind,&(auxSocio.nroSocio),&(nro_RegAux));
     if(resultado == 1)
     {
@@ -170,66 +180,100 @@ int nuevoSocio(t_indice *ind, char *rutaBin)
     }
     else
     {
-        puts("\nIngrese el Apellido y nombre del nuevo socio: ");
-        fgets(auxSocio.apyn,TAMNOMBRE,stdin);
+        do
+        {
+            printf("\nIngrese el Apellido y nombre del nuevo socio: ");
+            fgets(auxSocio.apyn,TAMNOMBRE,stdin);
 
-        fflush(stdin);
+            fflush(stdin);
+        }
+        while(!esCadena(auxSocio.apyn));
 
-        puts("\nIngrese DNI del nuevo socio: ");
-        scanf("%ld",&auxSocio.dni);
-
-        puts("\nIngrese la fecha de nacimiento del nuevo socio \n");
-        puts("\nAnio: ");
-        scanf("%d",&auxSocio.fecha_Nac.aa);
-
-        puts("\nMes: ");
-        scanf("%d",&auxSocio.fecha_Nac.mm);
-
-        puts("\nDia: ");
-        scanf("%d",&auxSocio.fecha_Nac.dd);
 
         do
         {
-            puts("\nIngrese sexo del nuevo socio ('F' u 'M' u 'O'): ");
+            printf("\nIngrese DNI del nuevo socio: ");
+            scanf("%ld",&auxSocio.dni);
+        }
+        while(!(auxSocio.dni>=10000 && auxSocio.dni<=100000000));
+
+        do
+        {
+            printf("\nIngrese la fecha de nacimiento del nuevo socio");
+            printf("\nAnio: ");
+            scanf("%d",&auxSocio.fecha_Nac.aa);
+
+            printf("\nMes: ");
+            scanf("%d",&auxSocio.fecha_Nac.mm);
+
+            puts("\nDia: ");
+            scanf("%d",&auxSocio.fecha_Nac.dd);
+
+        }
+        while(!esFechaValida(&auxSocio.fecha_Nac));
+
+
+        do
+        {
+            printf("\nIngrese sexo del nuevo socio ('F' u 'M' u 'O'): ");
             fflush(stdin);
             scanf("%c",&auxSocio.sexo);
             auxSocio.sexo=toupper(auxSocio.sexo);
         }
         while(auxSocio.sexo != 'M' && auxSocio.sexo != 'F' && auxSocio.sexo != 'O');
 
-        puts("\nIngrese la fecha de afiliacion del nuevo socio ");
+        do
+        {
+            printf("\nIngrese la fecha de afiliacion del nuevo socio ");
 
-        puts("\nAnio: ");
-        scanf("%d",&auxSocio.fecha_Afil.aa);
+            printf("\nAnio: ");
+            scanf("%d",&auxSocio.fecha_Afil.aa);
 
-        puts("\nMes: ");
-        scanf("%d",&auxSocio.fecha_Afil.mm);
+            printf("\nMes: ");
+            scanf("%d",&auxSocio.fecha_Afil.mm);
 
-        puts("\nDia: ");
-        scanf("%d",&auxSocio.fecha_Afil.dd);
-
-        puts("\nIngrese la categoria del nuevo socio: ");
-        fflush(stdin);
-        fgets(auxSocio.categoria,TAMNOMBRE,stdin);
-        fflush(stdin);
+            printf("\nDia: ");
+            scanf("%d",&auxSocio.fecha_Afil.dd);
 
 
+        }
+        while(!esFechaValida(&auxSocio.fecha_Afil));
 
-        puts("\nIngrese la fecha de la ultima cuota paga del nuevo socio ");
 
-        puts("\nAnio: ");
-        scanf("%d",&auxSocio.fecha_Ultimo_Cuota_Paga.aa);
+        do
+        {
+            printf("\nIngrese la categoria del nuevo socio: ");
+            fflush(stdin);
+            scanf("%s", auxSocio.categoria);
+            fflush(stdin);
 
-        puts("\nMes: ");
-        scanf("%d",&auxSocio.fecha_Ultimo_Cuota_Paga.mm);
+        }
+        while(!buscarCategoria(categorias,6,auxSocio.categoria));
 
-        puts("\nDia: ");
-        scanf("%d",&auxSocio.fecha_Ultimo_Cuota_Paga.dd);
+
+
+        do
+        {
+            printf("\nIngrese la fecha de la ultima cuota paga del nuevo socio ");
+
+            printf("\nAnio: ");
+            scanf("%d",&auxSocio.fecha_Ultimo_Cuota_Paga.aa);
+
+            printf("\nMes: ");
+            scanf("%d",&auxSocio.fecha_Ultimo_Cuota_Paga.mm);
+
+            printf("\nDia: ");
+            scanf("%d",&auxSocio.fecha_Ultimo_Cuota_Paga.dd);
+
+        }
+        while(!esFechaValida(&auxSocio.fecha_Ultimo_Cuota_Paga));
+
+
 
         auxSocio.estado='A';
         auxSocio.fecha_De_Baja.aa = auxSocio.fecha_De_Baja.mm = auxSocio.fecha_De_Baja.dd = 0;
         fseek(pf,0,SEEK_END);
-        nro_RegAux = (ftell(pf)/sizeof(t_Socio))+1;
+        nro_RegAux = (ftell(pf)/sizeof(t_Socio));
         ind_insertar(ind,&(auxSocio.nroSocio),nro_RegAux);
         fwrite(&auxSocio,sizeof(t_Socio),1,pf);
     }
@@ -241,25 +285,38 @@ int modificar_Nom_Apellido(t_indice *ind, char *rutaBin)
 
     FILE *pf;
     t_Socio auxSocio;
-    int resultado;
+    int resultado, flag;
     unsigned nro_RegAux;
     pf = fopen(rutaBin,"r+b");
     if(!pf)
     {
         return 0;
     }
-    printf("\nIngrese el NroSocio del Socio: ");
-    scanf("%ld", &(auxSocio.nroSocio));
-    //fflush(stdin);
+
+    do
+    {
+
+        printf("\nIngrese el NroSocio del Socio: ");
+        scanf("%ld", &(auxSocio.nroSocio));
+        fflush(stdin);
+
+    }
+    while(!(auxSocio.nroSocio >= 1 && auxSocio.nroSocio <= 10000000));
+
     resultado = ind_buscar(ind,&(auxSocio.nroSocio),&(nro_RegAux));
     if(resultado == 1)
     {
         fseek(pf,sizeof(t_Socio)*nro_RegAux,SEEK_SET);
         fread(&(auxSocio),sizeof(t_Socio),1,pf);
-
-        printf("\nIngrese el nombre modificado: ");
-        fflush(stdin);
-        fgets(auxSocio.apyn,TAMNOMBRE,stdin);
+        do
+        {
+            printf("\nIngrese el nombre modificado: ");
+            fflush(stdin);
+            fgets(auxSocio.apyn,TAMNOMBRE,stdin);
+            if((flag=!esCadena(auxSocio.apyn)))
+                printf("\nEl nombre ingreasdo no es valido\n");
+        }
+        while(flag);
 
 
         fseek(pf, (long)sizeof(t_Socio)*(-1),SEEK_CUR);
@@ -288,32 +345,48 @@ int darDeBaja(t_indice *ind, char *rutaBin) ///RUTINA (B)
     {
         return 0;
     }
-    printf("\nIngrese el NroSocio del Socio para dar de BAJA: ");
-    scanf("%ld", &(auxSocio.nroSocio));
+
+    do
+    {
+
+        printf("\nIngrese el NroSocio del Socio para dar de BAJA: ");
+        scanf("%ld", &(auxSocio.nroSocio));
+        fflush(stdin);
+
+    }
+    while(!(auxSocio.nroSocio >= 1 && auxSocio.nroSocio <= 10000000));
+
+
     fflush(stdin);
     resultado = ind_buscar(ind,&(auxSocio.nroSocio),&(nro_RegAux));
     if(resultado == 1)
     {
         fseek(pf,sizeof(t_Socio)*nro_RegAux,SEEK_SET);
         fread(&(auxSocio),sizeof(t_Socio),1,pf);
-        if(auxSocio.estado == 'B') ///cambiar la B por I
+        if(auxSocio.estado == 'I')
         {
             printf("\n\nEl socio ya existe y esta Inactivo.\n");
         }
         else
         {
 
-            auxSocio.estado = 'B';
+            auxSocio.estado = 'I';
             fseek(pf, (long)sizeof(t_Socio)*(-1),SEEK_CUR);
 
-            printf("\nIngrese la fecha de baja ");
+            do
+            {
+                printf("\nIngrese la fecha de baja ");
 
-            printf("\nAnio: ");
-            scanf("%d",&auxSocio.fecha_De_Baja.aa);
-            printf("\nMes: ");
-            scanf("%d",&auxSocio.fecha_De_Baja.mm);
-            printf("\nDia: ");
-            scanf("%d",&auxSocio.fecha_De_Baja.dd);
+                printf("\nAnio: ");
+                scanf("%d",&auxSocio.fecha_De_Baja.aa);
+                printf("\nMes: ");
+                scanf("%d",&auxSocio.fecha_De_Baja.mm);
+                printf("\nDia: ");
+                scanf("%d",&auxSocio.fecha_De_Baja.dd);
+
+            }
+            while(!esFechaValida(&auxSocio.fecha_De_Baja));
+
 
 
 
@@ -331,11 +404,6 @@ int darDeBaja(t_indice *ind, char *rutaBin) ///RUTINA (B)
 }
 int listar_socios_baja(t_indice *ind, char *rutaBin)
 {
-    ///Recorrer lista(lista, accion, param) ///param arch
-    ///Dentro recorrer Lista llama accion///
-    ///Accion es (mostrar Si baja)///
-    /// Carga del arch el registro buscado en un aux///
-    ///Si el aux tiene estado en B, lo mustra completo por pantalla///
     FILE *pf;
     int r;
     pf = fopen(rutaBin, "rb");
@@ -361,12 +429,13 @@ int listar_socios_alta(t_indice *ind, char *rutaBin)
     return r;
 
 }
-int listar_10_socios_mayor_retraso(char* rutaBin) ///fijarse que muestra los 10 pero al reves
+int listar_10_socios_mayor_retraso(char* rutaBin)
 {
     t_lista aux_lista;
     int i=0;
     t_Socio aux_socio;
     t_Socio basura;
+
     FILE* pf = fopen(rutaBin,"rb");
 
     if(!pf)
@@ -392,6 +461,10 @@ int listar_10_socios_mayor_retraso(char* rutaBin) ///fijarse que muestra los 10 
         }
         fread(&aux_socio,sizeof(t_Socio),1,pf);
     }
+
+    if(!(ordenarListaInsercion(&(aux_lista),comp_mayor_retraso)))
+        return 0;
+
 
     recorrerLista(&aux_lista,mostrar_Todos,0);
 
@@ -439,7 +512,7 @@ void mostrar_Si_Baja(const void* dato, unsigned tam_RegIndice, void *arch)
 
     fread(&aux,sizeof(t_Socio),1,pf);
 
-    if(aux.estado == 'B')  ///I
+    if(aux.estado == 'I')
     {
         mostrarSocio(&aux);
     }
@@ -471,6 +544,7 @@ void mostrar_Todos(const void* dato, unsigned tam_RegIndice, void *arch)
 }
 void mostrarSocio(t_Socio *socio)
 {
+    puts("_________________________________________________________");
     printf("\nNro Socio: %li", socio->nroSocio);
     printf("\nApellido y Nombre: %s", socio->apyn);
     printf("\nDni: %li", socio->dni);
@@ -480,10 +554,45 @@ void mostrarSocio(t_Socio *socio)
     printf("\nCategoria: %s", socio->categoria);
     printf("\nFecha ultima Cuota Paga: %d - %d - %d", socio->fecha_Ultimo_Cuota_Paga.dd, socio->fecha_Ultimo_Cuota_Paga.mm, socio->fecha_Ultimo_Cuota_Paga.aa);
     printf("\nEstado: %c", socio->estado);
-    if(socio->estado == 'B')
+    if(socio->estado == 'I')
         printf("\nFecha de Baja: %d - %d - %d", socio->fecha_De_Baja.dd, socio->fecha_De_Baja.mm, socio->fecha_De_Baja.aa);
     printf("\n");
 
 }
+int esCadena(const char* cad)
+{
+    while(*cad)
+    {
+        if(!isalpha(*cad) && !isspace(*cad))
+        {
+            return 0;
+        }
+        cad++;
 
+    }
+    return 1;
+}
+
+int esFechaValida(const t_fecha* fec)
+{
+    const char dias[][12] = {{31,28,31,30,31,30,31,31,30,31,30,31},
+        {31,29,31,30,31,30,31,31,30,31,30,31}
+    };
+
+    return fec->mm > 0 && fec->mm <=12 &&
+           fec->aa >=1600 && fec->aa <= 2024 &&
+           fec->dd > 0 && fec->dd <=dias[ESBICIESTO(fec->aa)][fec->mm -1];
+}
+int buscarCategoria(const char vec[][10],int ce, const char* cat)
+{
+    int i;
+
+    for(i=0; i<ce; i++)
+    {
+        if(strcmpi(vec[i],cat) == 0)
+            return 1;
+
+    }
+    return 0;
+}
 

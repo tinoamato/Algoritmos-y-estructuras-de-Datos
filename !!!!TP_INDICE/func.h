@@ -57,4 +57,8 @@ void mostrar_Si_Baja(const void* dato, unsigned tam_RegIndice, void *arch);
 void mostrar_Si_Alta(const void* dato, unsigned tam_RegIndice, void *arch);
 void mostrar_Todos(const void* dato, unsigned tam_RegIndice, void *arch);
 void mostrarSocio(t_Socio *socio);
+int esCadena(const char* cad);
+int esFechaValida(const t_fecha* fec);
+int buscarCategoria(const char vec[][10] ,int ce, const char* cat);
+
 #endif // FUNC_H_INCLUDED

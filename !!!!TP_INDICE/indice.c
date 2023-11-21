@@ -63,9 +63,9 @@ int ind_cargar (t_indice* ind, const char* path)
         return 0;
     }
     fread(aux, ind->tamClave+sizeof(unsigned), 1, pf);
-    while(!feof(pf) && estado)  ///Tal vez estado no va
+    while(!feof(pf) && estado)
     {
-        estado = insertarEnOrdenLista(&(ind->lista),ind->tamClave+sizeof(unsigned), &aux, ind->cmp);
+        estado = insertarEnOrdenLista(&(ind->lista),ind->tamClave+sizeof(unsigned), aux, ind->cmp);
         fread(aux, ind->tamClave+sizeof(unsigned), 1, pf);
     }
     fclose(pf);

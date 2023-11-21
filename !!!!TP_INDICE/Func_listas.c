@@ -24,8 +24,6 @@ int insertarEnOrdenLista(t_lista *pl, size_t tam, const void *elem, int(*cmp)(co
         pl = &(*pl)->sig;
     }
     memcpy(nue->info,elem,tam);
-    // long aux_a;
-    //memcpy(&aux_a,elem+sizeof(unsigned),sizeof(long));
     nue->tam = tam;
     nue->sig = *pl;
     *pl = nue;
@@ -100,7 +98,7 @@ int recorrerLista(const t_lista *pl, void (*accion)(const void*,unsigned, void*)
     }
     while(*pl && r)  ///RECORRE TODA LA LISTA
     {
-       accion((*pl)->info,(*pl)->tam, parametro);
+        accion((*pl)->info,(*pl)->tam, parametro);
         pl = &(*pl)->sig;
     }
     return 1;
@@ -120,5 +118,22 @@ int eliminarPrimeroLista(t_lista* pl,size_t tam,void* elem)
 
 
 
+    return 1;
+}
+int ordenarListaInsercion(t_lista *pl, int (*cmp)(const void*, const void*)){
+    t_nodo* nodo;
+    t_lista listOrd = NULL; ///LISTA AUXILIAR
+    t_lista* plord = &listOrd; ///Apunto el punteroAux al primer elemento de mi lista Aux
+    while(*pl){ ///Mientras queden elementos en mi lista desordnada
+        nodo = *pl; ///Desengancho
+        *pl = nodo->sig; ///Piso el dato
+        while(*plord && cmp((*plord)->info, nodo->info)> 0){  ///Busco la posicion para insertar
+            plord = &(*plord)->sig;
+        }
+        nodo->sig = *plord;  ///Engancho
+        *plord = nodo;///Pongo el elemnto en la posicion que deberia estar
+        *plord = listOrd; ///Apunto el punteroAux al primer elemento de mi lista Aux
+    }
+    *pl = listOrd; ///Apunto la lista orginial a la lista ordenada
     return 1;
 }
